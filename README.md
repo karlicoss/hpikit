@@ -22,6 +22,7 @@ Its extras are:
 - `hpikit.cli.export`: the command line of export scripts like `python3 -m ghexport.export`, with API parameters from a `--secrets` file or `--<param>` options.
 - `hpikit.cli.dal`: the command line of DAL modules, e.g. `python3 -m ghexport.dal /path/to/exports/*.json.zst`.
 - `hpikit.cli.format_epilog`: renders a parser's epilog for the literate READMEs.
+- `hpikit.cli.testing`: `check_cli_starts(module)`, a smoke test that `python -m <module> --help` works, for exporters' tests.
 
 ## Development
 
