@@ -17,8 +17,10 @@ import json
 import os
 import warnings
 from collections.abc import Callable
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from _typeshed import SupportsRead
 
 type Json = dict[str, Any]  # todo Mapping?
 """
@@ -29,7 +31,7 @@ load() and loads() return Any instead, since the top level of a file can also be
 BACKEND_ENV_VAR = 'HPIKIT_JSON_BACKEND'
 
 # Tradeoffs below were measured on real 6-12 MB exports (Reddit, GitHub, Hypothesis) with Python 3.14 in October 2026.
-# See doc/json-backends.md in the hpikit repository for the full comparison tables.
+# See doc/json_backends.md in the hpikit repository for the full comparison tables.
 
 
 # Default when installed: the fastest or on par with it, about 3x faster than stdlib, and with low peak memory.
@@ -91,10 +93,10 @@ def loads(data: bytes | str) -> Any:
     return _backend()(data)
 
 
-def load(path: Path) -> Any:
+def load(fp: SupportsRead[str | bytes]) -> Any:
     """
-    Parse the whole file at once.
-    Unlike json.load(), this takes a path rather than a file object.
-    It's read with read_bytes(), so a kompress.CPath is decompressed transparently.
+    Parse a whole file, like json.load(): fp is a text or binary file object.
+    json.load()'s decoder options, e.g. object_hook, aren't supported, since msgspec has no equivalents.
+    For a path, use loads(path.read_bytes()), which also decompresses a kompress.CPath transparently.
     """
-    return _backend()(path.read_bytes())
+    return _backend()(fp.read())
