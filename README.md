@@ -12,9 +12,9 @@ Its extras are:
 
 ## Modules
 
-- `hpikit.json`: `load(path)`/`loads(data)`, and `Json` (`dict[str, Any]`) for a JSON object.\
+- `hpikit.json`: `load(fp)`/`loads(data)` like the standard library's json, and `Json` (`dict[str, Any]`) for a JSON object.\
   msgspec is used if it's installed, otherwise stdlib json with a warning; `HPIKIT_JSON_BACKEND=msgspec` or `stdlib` picks one explicitly.\
-  [doc/json-backends.md](doc/json-backends.md) compares the parsers.
+  [doc/json_backends.md](doc/json_backends.md) compares the parsers.
 - `hpikit.paths`: `get_files` expands paths, globs and directories into a sorted tuple of paths, wrapping compressed ones in `kompress.CPath` if kompress is installed.\
   `as_paths` just normalizes a path or paths, keeping a `CPath` as it is; `Paths` is the type both accept.
 - `hpikit.datetime`: checked `AwareDateTime`, `NaiveDateTime` and `Date` types, with the `aware()`, `naive()` and `date_only()` validators.\

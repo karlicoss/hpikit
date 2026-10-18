@@ -24,14 +24,20 @@ def uncached_default() -> Iterator[None]:
     _default_backend.cache_clear()
 
 
+@pytest.mark.parametrize('mode', ['rb', 'r'])
 @pytest.mark.parametrize('backend', sorted(_BACKENDS))
-def test_load(backend: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_load(backend: str, mode: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """
+    Like json.load(), load() takes a binary or text file object.
+    """
     monkeypatch.setenv(BACKEND_ENV_VAR, backend)
     path = tmp_path / 'export.json'
     write_kwargs = {'encoding': 'utf-8'} if os.name == 'nt' and sys.version_info < (3, 15) else {}
     path.write_text('{"records": [{"id": 1, "title": "naïve 🙂", "score": 0.5, "edited": null}]}', **write_kwargs)
 
-    assert load(path) == {'records': [{'id': 1, 'title': 'naïve 🙂', 'score': 0.5, 'edited': None}]}
+    # read with the same encoding as written; binary mode takes none
+    with path.open(mode, encoding=write_kwargs.get('encoding') if mode == 'r' else None) as fo:
+        assert load(fo) == {'records': [{'id': 1, 'title': 'naïve 🙂', 'score': 0.5, 'edited': None}]}
 
 
 def test_default_keeps_large_integers_exact(monkeypatch: pytest.MonkeyPatch) -> None:
