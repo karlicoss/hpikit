@@ -57,7 +57,7 @@ def main[D](*, DAL: Callable[[tuple[Path, ...]], D], demo: Callable[[D], None] |
     # TODO autoreload would be nice... https://github.com/ipython/ipython/issues/1144
     # TODO maybe just launch through ipython in the first place?
     if args.interactive:
-        import IPython  # type: ignore[import-not-found]  # ty: ignore[unresolved-import]
+        import IPython  # type: ignore[import-not-found]  # ty: ignore[import-not-found]
 
         IPython.embed(header="Feel free to mess with 'dal' object in the interactive shell")
     else:
